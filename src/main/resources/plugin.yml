@@ -1,0 +1,32 @@
+name: RoseHomes
+version: @version@
+main: com.github.skiller9090.rosehomes.RoseHomes
+api-version: 1.16
+prefix: RoseHomes
+authors: [ Skiller9090 ]
+description: A Skiller9090 plugin for creating homes with a GUI
+website: www.github.com/Skiller9090
+permissions:
+  rosehomes.*:
+    description: Inherits all the plugins permission nodes
+    children:
+      rosehomes.getpos: true
+      rosehomes.set: true
+      rosehomes.remove: true
+      rosehomes.list: true
+      rosehomes.home: true
+  rosehomes.getpos:
+    description: Allows the use of the getpos command
+    default: op
+  rosehomes.set:
+    description: Allows the use of the set command
+    default: op
+  rosehomes.remove:
+    description: Allows the use of the remove command
+    default: op
+  rosehomes.list:
+    description: Allows the use of the list command
+    default: op
+  rosehomes.home:
+    description: Allows the use of the home command
+    default: op

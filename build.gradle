@@ -1,0 +1,73 @@
+import org.apache.tools.ant.filters.ReplaceTokens
+
+plugins {
+    id 'com.github.johnrengelman.shadow' version '5.1.0' apply false
+}
+
+allprojects {
+    apply plugin: 'java'
+    apply plugin: 'com.github.johnrengelman.shadow'
+
+    group = 'com.github.skiller9090'
+    version = '0.2-DEV'
+
+    sourceCompatibility = '11'
+    targetCompatibility = '11'
+
+    repositories {
+        mavenCentral()
+        jcenter()
+
+        maven {
+            name = 'spigotmc-repo'
+            url = 'https://hub.spigotmc.org/nexus/content/repositories/snapshots/'
+        }
+        maven {
+            name = 'sonatype'
+            url = 'https://oss.sonatype.org/content/groups/public/'
+        }
+        maven {
+            name = 'aikar'
+            url = 'https://repo.aikar.co/content/groups/aikar/'
+        }
+    }
+}
+
+configurations {
+    childJars
+}
+
+dependencies {
+    compileOnly 'org.spigotmc:spigot-api:1.16.3-R0.1-SNAPSHOT'
+
+    implementation  'co.aikar:acf-bukkit:0.5.0-SNAPSHOT'
+
+    subprojects.each {
+        childJars project(it.path)
+    }
+}
+
+shadowJar {
+    archiveClassifier.set(null)
+
+    relocate('co.aikar.commands', 'com.github.skiller9090.rosehomes.lib.acf.commands')
+
+    exclude 'acf-*.properties'
+}
+
+jar {
+    dependsOn configurations.childJars
+    from {
+        configurations.childJars.collect {
+            zipTree(it)
+        }
+    }
+}
+
+processResources {
+    from(sourceSets.main.resources.srcDirs) {
+        filter ReplaceTokens, tokens: [version: version]
+    }
+}
+
+tasks.build.dependsOn shadowJar
